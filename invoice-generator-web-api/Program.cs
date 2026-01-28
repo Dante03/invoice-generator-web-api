@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MiPoliticaCors", policy =>
     {
-        policy.WithOrigins("https://invoice-generator-gzrre6jps-dantescorps-projects.vercel.app/", "http://localhost:3001")
+        policy.WithOrigins("https://invoice-generator-web-zeta.vercel.app", "http://localhost:3001")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
