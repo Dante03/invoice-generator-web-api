@@ -13,7 +13,7 @@ builder.Services.AddScoped<InvoiceService>();
 builder.Services.AddScoped<IInvoicePdfService, InvoicePdfService>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("MiPoliticaCors", policy =>
+    options.AddPolicy("Front", policy =>
     {
         policy.WithOrigins("https://invoice-generator-web-zeta.vercel.app", "http://localhost:3001")
               .AllowAnyHeader()
@@ -31,7 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("MiPoliticaCors");
+app.UseCors("Front");
 
 app.UseAuthorization();
 
