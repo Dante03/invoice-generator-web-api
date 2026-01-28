@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("Front", policy =>
     {
-        policy.WithOrigins("https://invoice-generator-web-zeta.vercel.app", "http://localhost:3001")
+        policy.WithOrigins("https://invoice-generator-web-zeta.vercel.app", "http://localhost:3001", "http://localhost:3000")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
