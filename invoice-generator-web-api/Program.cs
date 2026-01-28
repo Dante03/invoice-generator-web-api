@@ -15,9 +15,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MiPoliticaCors", policy =>
     {
-        policy.WithOrigins("https://midominio.com", "http://localhost:3001") // orígenes permitidos
-              .AllowAnyHeader()   // permite cualquier header
-              .AllowAnyMethod();  // permite cualquier método (GET, POST, PUT, DELETE, etc.)
+        policy.WithOrigins("https://invoice-generator-web-zeta.vercel.app", "http://localhost:3001")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
