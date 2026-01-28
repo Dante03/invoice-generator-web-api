@@ -7,23 +7,32 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# Esta fase se usa para compilar el proyecto de servicio
+# Imagen para compilar
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["../invoice-generator-web-api/invoice-generator-web-api.csproj", "../invoice-generator-web-api/"]
-RUN dotnet restore "./invoice-generator-web-api/invoice-generator-web-api.csproj"
-COPY . .
-WORKDIR "/src/invoice-generator-web-api"
-RUN dotnet build "./invoice-generator-web-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Esta fase se usa para publicar el proyecto de servicio que se copiará en la fase final.
+# Copiamos el csproj desde la carpeta del proyecto
+COPY ["invoice-generator-web-api/invoice-generator-web-api.csproj", "invoice-generator-web-api/"]
+
+# Restauramos dependencias
+RUN dotnet restore "invoice-generator-web-api/invoice-generator-web-api.csproj"
+
+# Copiamos todo el código
+COPY . .
+
+# Entramos a la carpeta del proyecto
+WORKDIR "/src/invoice-generator-web-api"
+
+# Compilamos
+RUN dotnet build "invoice-generator-web-api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Publicamos
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./invoice-generator-web-api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "invoice-generator-web-api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Esta fase se usa en producción o cuando se ejecuta desde VS en modo normal (valor predeterminado cuando no se usa la configuración de depuración)
+# Imagen final
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
