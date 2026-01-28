@@ -1,0 +1,40 @@
+using invoice_generator_web_api.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<InvoiceService>();
+builder.Services.AddScoped<IInvoicePdfService, InvoicePdfService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MiPoliticaCors", policy =>
+    {
+        policy.WithOrigins("https://midominio.com", "http://localhost:3001") // orígenes permitidos
+              .AllowAnyHeader()   // permite cualquier header
+              .AllowAnyMethod();  // permite cualquier método (GET, POST, PUT, DELETE, etc.)
+    });
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseCors("MiPoliticaCors");
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
