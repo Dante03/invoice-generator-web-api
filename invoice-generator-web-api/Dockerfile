@@ -12,7 +12,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["invoice-generator-web-api/invoice-generator-web-api.csproj", "invoice-generator-web-api/"]
+COPY ["../invoice-generator-web-api/invoice-generator-web-api.csproj", "../invoice-generator-web-api/"]
 RUN dotnet restore "./invoice-generator-web-api/invoice-generator-web-api.csproj"
 COPY . .
 WORKDIR "/src/invoice-generator-web-api"
