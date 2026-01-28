@@ -1,48 +1,16 @@
-name: CI/CD to Render
+name: Deploy to Render
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      # 1. Checkout del código
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # 2. Instalar .NET SDK
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
-
-      # 3. Restaurar dependencias
-      - name: Restore dependencies
-        run: dotnet restore ./invoice-generator-web-api/invoice-generator-web-api.csproj
-
-      # 4. Compilar
-      - name: Build
-        run: dotnet build ./invoice-generator-web-api/invoice-generator-web-api.csproj --configuration Release --no-restore
-
-      # 5. Ejecutar tests (si tienes)
-      - name: Run tests
-        run: dotnet test --no-build --verbosity normal
-
   deploy:
     runs-on: ubuntu-latest
-    needs: build
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Render Deploy Action (requiere tu API Key de Render)
-      - name: Deploy to Render
-        uses: render-oss/render-action@v1
-        with:
-          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
-          apiKey: ${{ secrets.RENDER_API_KEY }}
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          https://api.render.com/deploy/srv-xxxxxxxxxxxx?key=${{ secrets.RENDER_DEPLOY_KEY }}
